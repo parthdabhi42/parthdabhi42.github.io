@@ -18,25 +18,9 @@
         #viewport {
             width: 100vw;
             height: 100vh;
-            position: relative;
-            background-color: #000;
+            position: relative;            
             overflow: hidden;
-        }
-
-        .wrapper {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 50%;
-            margin-top: -80px;
-        }
-
-        .wrapper>img {
-            width: 100%;
-            display: block;
-            height: auto;
-        }
-
+        }       
         #log {
             position: absolute;
             color: #fff;
@@ -65,6 +49,7 @@
             text-align: center;
             margin: 0 auto;
             background-size: contain;
+            height: 70%;
         }
     </style>
 </head>
@@ -74,7 +59,7 @@
     <div id="viewport">
         <div id="point"></div>
         <div id="log"></div>
-        <div id="pinch-zoom-image-id" class="wrapper"></div>
+        <div id="pinch-zoom-image-id" class="wrapper"><span>Hello</span></div>
     </div>
 </body>
 

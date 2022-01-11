@@ -1,67 +1,1003 @@
 <!DOCTYPE html>
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Parth</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Parth 42</title>
+    <link rel="stylesheet" href="##Link1##" />    
+    <link rel="stylesheet" href="https://emprise.azurewebsites.net/Content/IntrepidTheme/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://emprise.azurewebsites.net/Content/TreeStructure/css/StructurechartShape.css" />
+    <link rel="stylesheet" href="https://emprise.azurewebsites.net/Content/TreeStructure/css/Orgchart_percentage.css" />
+    <style>
+        .table thead {
+            background: lightgrey;
+        }
+
+        .CollapseGrid {
+            width: 100% !important;
+        }
+
+        .DataTableCollapse {
+            display: none;
+        }
+
+        /*For Column Select*/
+        .dropdown-menu {
+            font-size: 14px;
+        }
+
+        .columnData {
+            width: 250px;
+            padding-left: 8px;
+            padding-top: 5px;
+            border-bottom: 2px solid lightgray;
+            padding-right: 7px;
+        }
+
+        /*for group entity chart text*/
+        .spanTxt {
+            color: #007bff;
+        }
+
+        select.form-control {
+            height: 2.50rem !important;
+        }
+
+        input.form-control {
+            height: 2.50rem !important;
+        }
+
+        .clickableLink {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .jqstooltip {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            visibility: hidden;
+            background: rgb(0, 0, 0) transparent;
+            background-color: rgba(0, 0, 0, 0.6);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+            -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+            color: white;
+            font: 10px arial, san serif;
+            text-align: left;
+            white-space: nowrap;
+            padding: 5px;
+            border: 1px solid white;
+            z-index: 10000;
+        }
+
+        .jqsfield {
+            color: white;
+            font: 10px arial, san serif;
+            text-align: left;
+        }
+
+        .dt-buttons {
+            display: none;
+        }
+
+        .chart_container {
+            /*max-width: 1000px;*/
+            padding: 0 10px;
+            margin: 0 auto;
+            width: fit-content;
+        }
+
+        .rectangle {
+            /*position: relative;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        text-align: center;*/
+        }
+
+        .ibox-content {
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .orgchart {
+            text-align: center;
+        }
+
+        .level-1 {
+            width: 100%;
+            /*margin: 0 auto 40px;*/
+            margin: 0 auto 36px;
+            /*border: 1px solid black;*/
+            /*display: inline-block;*/
+            /*background: var(--level-1);*/
+        }
+
+        .level-1::before {
+            /*content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 40px;
+            background: black;*/
+        }
+
+        .top-bottom {
+            position: relative;
+            width: 180px !important;
+            /*width: 240px !important;*/
+            height: 120px !important;
+            /*height: 150px !important;*/
+        }
+
+        .top-bottom:before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 39px;
+            /*38px;*/
+            background: gray;
+        }
+
+        .top-bottom-middlelvl {
+            position: relative;
+            width: 180px !important;
+            /*width: 240px !important;*/
+            height: 120px !important;
+            /*height: 150px !important;*/
+        }
+
+        .top-bottom-middlelvl:after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 41px;
+            /*40px 37px*/
+            background: gray;
+        }
+
+        .bottom-top,
+        .no-bottom-top {
+            position: relative;
+            width: 180px !important;
+            /*width: 240px !important;*/
+            height: 120px !important;
+            /*height: 150px !important;*/
+        }
+
+        .bottom-top:before {
+            content: "";
+            position: absolute;
+            /*top: -28%;*/
+            top: -31.6%;
+            /*-35.6%, -35%,-37%;*/
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 44px;
+            /*47px*/
+            background: gray;
+        }
+
+        .top-bottom-right-horz:after {
+            width: calc(100% + 0px);
+            content: "";
+            position: absolute;
+            bottom: -39px;
+            border-top: 1px solid gray;
+            box-sizing: border-box;
+            right: 50%;
+            margin: 0 auto;
+        }
+
+        .bottom-top-right-horz:after {
+            width: calc(100% + 0px);
+            content: "";
+            position: absolute;
+            bottom: 160px;
+            /*188px*/
+            border-top: 1px solid gray;
+            box-sizing: border-box;
+            right: 50%;
+            margin: 0 auto;
+        }
+
+        .top-bottom-left-horz:after {
+            width: calc(98% + 4px);
+            content: "";
+            position: absolute;
+            bottom: -39px;
+            left: 50%;
+            border-top: 1px solid gray;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+
+        .bottom-top-left-horz:after {
+            width: calc(98% + 4px);
+            content: "";
+            position: absolute;
+            bottom: 160px;
+            /*188px*/
+            left: 50%;
+            border-top: 1px solid gray;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+
+        .orgchart .intermediary-dept1 {
+            background: url("http://localhost:54242/Content/TreeStructure/img/round-triangel.png");
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-size: contain;
+            padding: 63px 10px;
+            width: 240px;
+        }
+
+        /*.orgchart .intermediary-dept1:hover {
+            background-color: rgba(0, 153, 51, 0.5);
+        }*/
+
+        /* for tooltip changes */
+
+        .tooltipH3 {
+            text-decoration: underline;
+        }
+
+        .fa-info-circle .tooltipDiv {
+            background: #FFFFFF;
+            padding: 7px;
+            border-radius: 5px;
+            position: absolute;
+            min-width: 50px;
+            display: none;
+            left: 100px;
+            border: 1px solid;
+            white-space: nowrap;
+        }
+
+        .fa-info-circle .tooltipDiv:before {
+            content: '';
+            height: 3px;
+            width: 0;
+            border: 7px solid transparent;
+            border-bottom-color: #1d1d1d;
+            position: absolute;
+            top: -16px;
+            left: 14px;
+        }
+
+        .tooltipDiv a {
+            color: #1884BC;
+        }
+
+        .chart_container .fa-info-circle {
+            visibility: hidden !important;
+        }
+
+        #btn_ZoomIn {
+            position: absolute;
+            top: 50px;
+            /*transform: translatey(-44%);*/
+        }
+
+        #btn_ZoomOut {
+            top: 84px;
+            /*transform: translatey(-50%);*/
+            position: absolute;
+        }
+
+        #btn_ZoomReset {
+            position: absolute;
+            top: 118px;
+            /*transform: translatey(-62%);*/
+        }
+
+        #btn_FullScreen {
+            position: absolute;
+            top: 154px;
+        }
+
+        #btn_Print {
+            position: absolute;
+            top: 187px;
+        }
+
+        #EntitychartDiv {
+            overflow: auto;
+            max-height: 750px;
+            max-width: 100%;
+            /*height: 1000px;*/
+            position: relative;
+            margin: 0.5rem;
+        }
+
+        #EntityStructureChart {
+            max-height: 850px;
+            max-width: 100%;
+            overflow: auto;
+            /*min-height: 413px;*/
+        }
+
+        /*for arrow display*/
+
+        .chart_container .level-1 .edge:hover {
+            cursor: pointer;
+        }
+
+        .chart_container .level-1 .bottomEdge {
+            bottom: 3px;
+        }
+
+        .chart_container .level-1 .verticalEdge {
+            width: calc(100% - 6px);
+            width: -webkit-calc(100% - 6px);
+            width: -moz-calc(100% - 6px);
+            height: 10px;
+            left: 4px;
+        }
+
+        .chart_container .level-1 .edge {
+            position: absolute;
+            cursor: default;
+            transition: .2s;
+        }
+
+        .oci {
+            display: inline-block;
+            position: relative;
+            font-style: normal;
+            font-family: Arial;
+        }
+
+        .chart_container .level-1 .bottomEdge.oci-chevron-down::before {
+            bottom: 1px;
+        }
+
+        .chart_container .level-1 .verticalEdge::before {
+            position: absolute;
+            left: calc(50% - 0.3125rem);
+        }
+
+        .oci-chevron-down::before {
+            content: "";
+            display: inline-block;
+            box-sizing: border-box;
+            width: 0.625rem;
+            height: 0.625rem;
+            border-width: 0 0.2rem 0.2rem 0;
+            border-style: solid;
+            border-color: #000;
+            background: transparent;
+            transform: rotate(45deg);
+            border-color: rgba(68, 157, 68, 0.5);
+        }
+
+        .chart_container .level-1 .topEdge {
+            top: 2px;
+        }
+
+        .oci-chevron-up::before {
+            content: "";
+            display: inline-block;
+            box-sizing: border-box;
+            width: 0.625rem;
+            height: 0.625rem;
+            border-width: 0 0.2rem 0.2rem 0;
+            border-style: solid;
+            border-color: #000;
+            background: transparent;
+            transform: rotate(-135deg);
+            border-color: rgba(68, 157, 68, 0.5);
+        }
+
+        .topBottomHeight {
+            position: relative;
+            width: 180px !important;
+            /*width: 240px !important;*/
+            height: 120px !important;
+            /*height: 150px !important;*/
+        }
+
+        /* Word Wrap */
+        .countrt-s {
+            text-align: center;
+            margin-top: 20px;
+            width: 166px;
+            left: -35px;
+            position: absolute;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /*.txtwordWrap {
+        word-break: break-all;
+        white-space: break-spaces;
+        font-size: 12px;
+        text-align: center;
+    }*/
+
+        .contentx {
+            position: absolute;
+            top: 35%;
+            /*43%;*/
+            left: 50%;
+            transform: translate(-50%, 0%);
+            width: 95px;
+        }
+
+        /* for text */
+        .textContent {
+            white-space: normal;
+        }
+
+        .EntityInv,
+        .EntityGrpEntInvInfo,
+        .GrpEntInvHeld {
+            min-height: 307px;
+        }
+
+        #invColsDrop {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #parentEntityColsDrop,
+        #childEntityColsDrop {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        div.contentx span.spanTxt,
+        div.contentx a {
+            width: 166px;
+            left: -35px;
+            position: absolute;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .chart_container .contentx a,
+        .chart_container .middle-level .contentx .spanTxt {
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
+        /* Changes */
+        .chart_container .level-3 .bottom-top:before {
+            top: -34% !important;
+            height: 43px !important;
+        }
+
+        .chart_container .level-2 .top-bottom:before {
+            height: 40px !important;
+        }
+
+        .chart_container .level-2 .top-bottom-middlelvl.trust-groupentity:after,
+        .chart_container .level-2 .top-bottom-middlelvl.trust-groupentity-lightgreen:after,
+        .chart_container .level-2 .top-bottom-middlelvl.trust-groupentity-lightyellow:after,
+        .chart_container .level-2 .top-bottom-middlelvl.trust-groupentity-lightorange:after,
+        .chart_container .level-2 .top-bottom.trust-groupentity:before,
+        .chart_container .level-2 .top-bottom.trust-groupentity-lightgreen:before,
+        .chart_container .level-2 .top-bottom.trust-groupentity-lightyellow:before,
+        .chart_container .level-2 .top-bottom.trust-groupentity-lightorange:before {
+            top: 98% !important;
+            height: 43px !important;
+        }
+
+        .chart_container .top-level-1 .top-bottom:before {
+            top: 99% !important;
+            height: 40px !important;
+        }
+
+        .chart_container .level-3 .bottom-top.disregardedpartnership-groupentity:before,
+        .chart_container .level-3 .bottom-top.partnership-grupentity:before,
+        .chart_container .level-3 .bottom-top.partnership-grupentity-lightgreen:before,
+        .chart_container .level-3 .bottom-top.partnership-grupentity-lightyellow:before,
+        .chart_container .level-3 .bottom-top.partnership-grupentity-lightorange:before {
+            height: 46px !important;
+        }
+
+        .chart_container .top-level-1 .trust-groupentity:before,
+        .chart_container .top-level-1 .trust-groupentity-lightgreen:before,
+        .chart_container .top-level-1 .trust-groupentity-lightyellow:before,
+        .chart_container .top-level-1 .trust-groupentity-lightorange:before {
+            top: 98% !important;
+            height: 41px !important;
+        }
+
+        /*Tooltip*/
+        .chart_container .infoIcon {
+            width: 20%;
+            margin: 0 auto;
+            position: relative;
+            top: 110%;
+        }
+
+        .chart_container .tooltipDiv {
+            background: #FFFFFF;
+            padding: 7px;
+            border-radius: 5px;
+            position: absolute;
+            min-width: 50px;
+            display: none;
+            left: 100px;
+            border: 1px solid;
+            white-space: nowrap;
+            z-index: 1;
+        }
+
+        .chart_container .close-tooltip {
+            position: absolute;
+            right: 2px;
+            top: 1px;
+            color: #f08080;
+            font-size: 15px;
+        }
+
+        .chart_container .fa-info-circle {
+            color: #808080;
+            font-size: 20px;
+            visibility: visible !important;
+        }
+
+        .st0 {
+            fill: none;
+            stroke: #000000;
+            stroke-width: 19.025;
+            stroke-miterlimit: 10;
+        }
+
+        .st1 {
+            display: none;
+            fill: #FFFFFF;
+        }
+
+        .st2 {
+            fill: #FFFFFF;
+        }
+
+        .blockMsg {
+            border-radius: 30px;
+        }
+
+        .menu-description {
+            line-height: 15px;
+            clear: both;
+            display: inline-block;
+            font-size: 11px;
+            width: 100%;
+        }
+
+        #dashboardmenu.active {
+            border-left: 10px solid #edbb5f;
+        }
+
+        #structureChartPageMenu.active {
+            border-left: 10px solid #488A99;
+        }
+
+
+        #individualinvestormenu.active {
+            border-left: 10px solid #2c9c91;
+        }
+
+        #entityinvestormenu.active {
+            border-left: 10px solid #19538c;
+        }
+
+        #entitymenu.active {
+            border-left: 10px solid #8c1953;
+        }
+
+        #controllingpersonmenu.active {
+            border-left: 10px solid #5f91ed;
+        }
+
+        #dashboardmenu>a:hover {
+            border-left: 10px solid #edbb5f;
+            color: #edbb5f !important;
+        }
+
+        #structureChartPageMenu>a:hover {
+            border-left: 10px solid #488A99;
+            color: #488A99 !important;
+        }
+
+        #individualinvestormenu>a:hover {
+            border-left: 10px solid #2c9c91;
+            color: #2c9c91 !important;
+        }
+
+        #entityinvestormenu>a:hover {
+            border-left: 10px solid #19538c;
+            color: #19538c !important;
+        }
+
+        #entitymenu>a:hover {
+            border-left: 10px solid #8c1953;
+            color: #8c1953 !important;
+        }
+
+        #controllingpersonmenu>a:hover {
+            border-left: 10px solid #5f91ed;
+            color: #5f91ed !important;
+        }
+
+        #ddllastVisitedIndInvestor>a:hover {
+            border-left: 10px solid #3f3f3f;
+            color: #3f3f3f !important;
+        }
+
+        #ddllastVisitedIndInvestor a:focus {
+            color: #3f3f3f !important;
+        }
+
+        #ddllastVisitedIndInvestor.active {
+            border-left: 10px solid #3f3f3f;
+        }
+
+        .lastVisitedIndsubInvestor>a:hover {
+            border-left: 10px solid #3f3f3f;
+            color: #3f3f3f !important;
+        }
+
+
+        #ddllastVisitedEntityInvestor>a:hover {
+            border-left: 10px solid #3f3f3f;
+            color: #3f3f3f !important;
+        }
+
+        #ddllastVisitedEntityInvestor a:focus {
+            color: #3f3f3f !important;
+        }
+
+        #ddllastVisitedEntityInvestor.active {
+            border-left: 10px solid #3f3f3f;
+        }
+
+        .lastVisitedEntitySubInvestor>a:hover {
+            border-left: 10px solid #3f3f3f;
+            color: #3f3f3f !important;
+        }
+
+
+        #ddllastVisitedGrpEntity>a:hover {
+            border-left: 10px solid #3f3f3f;
+            color: #3f3f3f !important;
+        }
+
+        #ddllastVisitedGrpEntity a:focus {
+            color: #3f3f3f !important;
+        }
+
+        #ddllastVisitedGrpEntity.active {
+            border-left: 10px solid #3f3f3f;
+        }
+
+        .lastVisitedGrpsubEntity>a:hover {
+            border-left: 10px solid #3f3f3f;
+            color: #3f3f3f !important;
+        }
+
+        .gridspanData {
+            font-size: 13px !important;
+            font-weight: normal !important;
+        }
+
+        .yesspanColor {
+            background: #78AB46 !important;
+        }
+
+        .nospanColor {
+            background: palevioletred !important;
+        }
+
+        .loading-indicator {
+            position: fixed;
+            z-index: 9999;
+            height: 7em;
+            width: 7em;
+            overflow: initial;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+        /* Transparent Overlay */
+
+        .loading-indicator:before {
+            content: '';
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* right nav bar menu */
+        .navbar-nav .dropdown-menu {
+            position: absolute;
+        }
+
+        .ulmenu {
+            list-style-type: none;
+            font-size: 15px;
+            margin-left: -30px;
+        }
+
+        #divShowSnapshot {
+            margin: auto;
+            display: none;
+        }
+
+        #colsDrop {
+            max-height: 650px;
+            overflow-y: auto;
+        }
+
+        .top-navigation .nav>li a:hover,
+        .top-navigation .nav>li a:focus,
+        .top-navigation .nav>li a:hover svg rect {
+            background: #fff;
+            color: #488A99;
+            fill: #488A99;
+        }
+
+        .top-navigation .nav>li a:hover svg path {
+            fill: #ffffff;
+        }
+
+        .top-navigation .nav>li a svg {
+            float: right;
+            margin-right: 5px
+        }
+
+        /* For menu minimize */
+        span.ddlMenuIcon {
+            white-space: nowrap;
+            top: 4px;
+        }
+
+        #menu_Recent_Ind\._Investors a,
+        #menu_Recent_Entity_Investors a,
+        #menu_Recent_Group_Entities a {
+            padding: 20px;
+        }
+
+        .cursor-pointer {
+            cursor: pointer !important;
+        }
+
+        .footer {
+            text-align: center;
+            background-color: #D2D2D2;
+        }
+
+        .navbar-static-top {
+            margin-bottom: 24px !important;
+        }
+
+        a.bg-success:focus,
+        a.bg-success:hover,
+        button.bg-success:focus,
+        button.bg-success:hover {
+            background-color: #1ab394 !important;
+            color: white !important;
+        }
+    </style>
     <style>
         body {
-            margin: 0;
-            padding: 0;
+            background-color: #ffffff !important;
         }
 
-        #dragWrapper {
-            margin: 40px;
-            background: whitesmoke;
-            width: 100%;
-            height: 1000px;
-            position: relative;
+        #childContent {
+            top: -244px !important;
         }
 
-        #drag {
-            touch-action: auto;
-            height: 500px;
-            width: 500px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            /* background-image: url(../images/image.jpg); */
-            background: lightskyblue;
-            background-size: cover;
+        /*#childContent.top-level-1 .top-bottom:before {
+                height: 33px !important;
+            }*/
+
+        /*#childContent.top-level-1 .top-bottom.disregardedpartnership-groupentity-2:before, #childContent.top-level-1 .top-bottom.disregardedpartnership-groupentity-lightgreen-2:before,
+            #childContent.top-level-1 .top-bottom.disregardedpartnership-groupentity-lightyellow-2:before, #childContent.top-level-1 .top-bottom.disregardedpartnership-groupentity-lightorange-2:before {
+                height: 36px !important;
+            }*/
+
+        /*#childContent.top-level-1 .trust-groupentity-2:before, #childContent.top-level-1 .trust-groupentity-lightgreen-2:before,
+            #childContent.top-level-1 .trust-groupentity-lightyellow-2:before, #childContent.top-level-1 .trust-groupentity-lightorange-2:before {
+                height: 56px !important;
+            }*/
+
+        .bottomText {
+            display: flex;
+            justify-content: space-between;
+            min-width: 100%;
+            position: fixed;
+            bottom: 5px;
         }
 
-
-        h2 {
-            margin: 0 auto;
-            text-align: center;
+        .nameSpan {
+            margin-left: 30px;
         }
 
-        #pinch-zoom-image-id {
-            background: url(../images/image.jpg);
-            /* height: 500px;*/
-            text-align: center;
-            margin: 0 auto;
-            background-size: contain;
-            height: 300px;
-            width: 200px;
+        .dateSpan {
+            margin-right: 30px;
+        }
+
+        #childContent .top-bottom-left-horz:after {
+            width: calc(100% + 8px) !important;
+        }
+
+        #childContent .top-bottom-right-horz:after {
+            width: calc(100% + 4px);
+        }
+
+        #childContent .top-bottom-left-horz {
+            margin-right: 5px !important;
+        }
+
+        #childContent .top-bottom-right-horz {
+            margin-left: 5px !important;
+        }
+
+        #childContent .top-bottom {
+            width: 160px !important;
+            height: 47px !important;
+        }
+
+        /*#chart-container, #chart-container .orgchart.b2t {
+            min-width: 100%;
+        }*/
+        #childContent {
+            width: max-content !important;
+        }
+
+        a {
+            color: #007bff !important;
         }
     </style>
 </head>
-
 <body>
-    <h2>Welcome User...</h2>
-    <div id="dragWrapper">
-        <div id="drag">
-            <div id="pinch-zoom-image-id">
+    <div id="EntitychartDiv">
+        <div class="chart_container">
+            <div class="level-1 rectangle orgchart top-level-1">
+                <div class="top-bottom top-bottom-left-horz disregardedtrust-groupentity percentage29"
+                    style="display: inline-block;margin: 20px 0 20px 0px;">
+                    <div class="contentx"><a href="/Entity/GetentityById?entityId=167&amp;recordId=774" target="_blank"
+                            style="text-decoration: underline;"><span class="txtwordWrap">Entity 111111</span></a>
+                        <div class="countrt-s"><span>Australia</span></div>
+                    </div>
+                    <div class="infoIcon"><a title="View Details"><i class="fa fa-info-circle"></i></a></div>
+                    <div class="tooltipDiv">
+                        <h3 class="tooltipH3">Entity 111111 </h3><i class="fa fa-window-close close-tooltip"
+                            title="Close"></i><br><span>Australia</span><br><span>1111111</span><br><span>Australia Tax
+                            Status : Trust</span><br><span>US Tax Status : Individual/sole proprietor/single member
+                            LLC</span>
+                    </div>
+                </div>
+                <div class="top-bottom hybridcompany-groupentity percentage0"
+                    style="display: inline-block;margin: 20px 0 20px 0px;">
+                    <div class="contentx"><a href="/Entity/GetentityById?entityId=127&amp;recordId=682" target="_blank"
+                            style="text-decoration: underline;"><span class="txtwordWrap">Satva Softech</span></a>
+                        <div class="countrt-s"><span>United States</span></div>
+                    </div>
+                    <div class="infoIcon"><a title="View Details"><i class="fa fa-info-circle"></i></a></div>
+                    <div class="tooltipDiv">
+                        <h3 class="tooltipH3">Satva Softech </h3><i class="fa fa-window-close close-tooltip"
+                            title="Close"></i><br><span>United States</span><br><span>001</span><br><span>United States
+                            Tax Status : Company</span><br><span>US Tax Status : Partnership</span>
+                    </div>
+                </div>
+                <div class="top-bottom top-bottom-right-horz disregardedtrust-groupentity-lightgreen percentage32"
+                    style="display: inline-block;margin: 20px 0 20px 0px;">
+                    <div class="contentx"><a href="/Entity/GetentityById?entityId=217&amp;recordId=775" target="_blank"
+                            style="text-decoration: underline;"><span class="txtwordWrap">Test20_10_2021</span></a>
+                        <div class="countrt-s"><span></span></div>
+                    </div>
+                    <div class="infoIcon"><a title="View Details"><i class="fa fa-info-circle"></i></a></div>
+                    <div class="tooltipDiv">
+                        <h3 class="tooltipH3">Test20_10_2021 </h3><i class="fa fa-window-close close-tooltip"
+                            title="Close"></i><br><span></span><br><span></span><br><span> Tax Status :
+                            Trust</span><br><span>US Tax Status : Individual/sole proprietor/single member LLC</span>
+                    </div>
+                </div>
+            </div>
+            <div class="level-1 rectangle orgchart level-2">
+                <div class="bottom-top top-bottom-middlelvl reversehybridcompany-groupentity-lightyellow middle-level"
+                    style="display: inline-block;margin: 20px 0 20px 0px;">
+                    <div class="contentx"><span class="spanTxt">David</span>
+                        <div class="countrt-s"><span>Australia</span></div>
+                    </div><i class="edge verticalEdge bottomEdge oci oci-chevron-down"></i><i
+                        class="edge verticalEdge topEdge oci oci-chevron-up"></i>
+                </div>
+            </div>
+            <div class="level-1 rectangle orgchart level-3">
+                <div class="bottom-top bottom-top-left-horz Individuals-blue-light percentage12"
+                    style="display: inline-block;margin: 20px 0 20px 0px;">
+                    <div class="contentx"><a href="/Entity/GetentityById?entityId=168&amp;recordId=579" target="_blank"
+                            style="text-decoration: underline;"><span class="txtwordWrap">Name11</span></a>
+                        <div class="countrt-s"><span>Australia</span></div>
+                    </div>
+                    <div class="infoIcon"><a title="View Details"><i class="fa fa-info-circle"></i></a></div>
+                    <div class="tooltipDiv">
+                        <h3 class="tooltipH3">Name11 </h3><i class="fa fa-window-close close-tooltip"
+                            title="Close"></i><br><span>Australia</span><br><span>12</span><br><span>Australia Tax
+                            Status : Individual</span><br><span>US Tax Status : Individual/sole proprietor/single member
+                            LLC</span>
+                    </div>
+                </div>
+                <div class="bottom-top partnership-grupentity-lightgreen percentage2"
+                    style="display: inline-block;margin: 20px 0 20px 0px;">
+                    <div class="contentx"><a href="/Entity/GetentityById?entityId=171&amp;recordId=506" target="_blank"
+                            style="text-decoration: underline;"><span class="txtwordWrap">Nitin- GroupEntity</span></a>
+                        <div class="countrt-s"><span></span></div>
+                    </div>
+                    <div class="infoIcon"><a title="View Details"><i class="fa fa-info-circle"></i></a></div>
+                    <div class="tooltipDiv">
+                        <h3 class="tooltipH3">Nitin- GroupEntity </h3><i class="fa fa-window-close close-tooltip"
+                            title="Close"></i><br><span></span><br><span>10076</span><br><span> Tax Status :
+                            Partnership</span><br><span>US Tax Status : Government</span>
+                    </div>
+                </div>
+                <div class="bottom-top bottom-top-right-horz disregardedentity-groupentity-lightyellow percentage0"
+                    style="display: inline-block;margin: 20px 0 20px 0px;">
+                    <div class="contentx"><a href="/Entity/GetentityById?entityId=172&amp;recordId=796" target="_blank"
+                            style="text-decoration: underline;"><span class="txtwordWrap">John- Group Entity</span></a>
+                        <div class="countrt-s"><span></span></div>
+                    </div>
+                    <div class="infoIcon"><a title="View Details"><i class="fa fa-info-circle"></i></a></div>
+                    <div class="tooltipDiv">
+                        <h3 class="tooltipH3">John- Group Entity </h3><i class="fa fa-window-close close-tooltip"
+                            title="Close"></i><br><span></span><br><span></span><br><span>US Tax Status : Disregarded
+                            Entity</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <button type="button" id="btn_ZoomIn" class="ZoomButtons btn btn-default mt-3 ml-1" title="Zoom In"
+        style="display: none;"><span class="glyphicon glyphicon-plus"></span></button>
+    <button type="button" id="btn_ZoomOut" class="ZoomButtons btn btn-default mt-3 ml-1" title="Zoom Out"
+        style="display: none;"><span class="glyphicon glyphicon-minus"></span></button>
+    <button type="button" id="btn_ZoomReset" class="ZoomButtons btn btn-default mt-3 ml-1" title="Reset"
+        style="display: none;"><span class="glyphicon glyphicon-refresh"></span></button>
+    <button id="btn_FullScreen" type="button" class="ZoomButtons btn btn-default ml-1 mt-3" title="Full Screen"
+        style="display: none;">
+        <span class="glyphicon glyphicon-new-window" id="FullScreen"></span>
+    </button>
+
+    <button id="btn_Print" type="button" class="ZoomButtons btn btn-default ml-1 mt-3" title="Print"
+        style="display: none;"><span class="glyphicon glyphicon-print"></span></button>
+    <span><b id="name" style="display: none;"></b></span>
+
+    <div class="bottomText"><span class="nameSpan"><b></b></span><span class="dateSpan"><b>06-Jan-2022 01:51
+                PM</b></span></div>
 </body>
 
 </html>
+<script>
+    (function () {
+        document.querySelectorAll("a").forEach(el => el.removeAttribute("href"));
+        document.querySelectorAll("div.node div.title").forEach(el => el.removeAttribute("onclick"));
+        document.querySelectorAll("div.node div.title").forEach(el => el.style.cursor = "auto");
+        document.querySelectorAll("i.oci-chevron-down, div.tooltipDiv").forEach(el => el.remove());
+    })();
+</script>
 <script type="text/javascript">
-    var element = document.getElementById('drag')
+    var element = document.getElementById('EntitychartDiv')
     var hammertime = new Hammer(element, {});
 
     hammertime.get('pinch').set({ enable: true });

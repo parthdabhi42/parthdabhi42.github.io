@@ -14,16 +14,18 @@
         .panzoom-elements {
             width: 100%;
             height: 500px;
+            background: #87cefa;
         }
         .zoomDiv {
             width: 50%;
             height: 250px;
             background: url(../images/image.jpg);
+            background-size: contain;
         }
     </style>
 </head>
 <body>
-    <h2>Zoom Testing 2</h2>
+    <h2>Zoom Testing 3</h2>
     <div class="panzoom-elements">
         <div class="zoomDiv"></div>
     </div>
@@ -37,7 +39,7 @@
         document.querySelectorAll("div.node div.title").forEach(el => el.style.cursor = "auto");
         document.querySelectorAll("i.oci-chevron-down, div.tooltipDiv").forEach(el => el.remove());
         
-        $(".panzoom-elements").panzoom({ });
+        $(".zoomDiv").panzoom({ });
     })();
 </script>
 

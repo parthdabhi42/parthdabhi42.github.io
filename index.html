@@ -22,6 +22,11 @@
             background: url(../images/image.jpg);
             background-size: contain;
         }
+        .reset-panzoom {
+            position: fixed;
+            top: 10%;
+            left: 15px;
+        }
     </style>
 </head>
 <body>
@@ -30,6 +35,7 @@
         <div id="viewer">
         </div>
     </div>
+    <button type="button" class="reset-panzoom">Reset Zoom</button>
 </body>
 
 </html>
@@ -42,6 +48,7 @@
             panOnlyWhenZoomed: true,
             increment: 0.4,
             startTransform: 'scale(1)',
+            $reset: $('.reset-panzoom, button.reset-panzoom'),
             onEnd: function(){
                 $('.zoomTargetGroup').panzoom( 'zoom', {increment: .01});
             }

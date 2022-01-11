@@ -25,7 +25,7 @@
     </style>
 </head>
 <body>
-    <h2>Zoom Testing...</h2>
+    <h2>Zoom Testing...1</h2>
     <div id="panzoom-elements">
         <div id="viewer">
         </div>
@@ -38,6 +38,7 @@
         const elem = document.getElementById('viewer');
         const panzoom = Panzoom(elem, {
             minScale: 1,
+            maxScale: 10,
             panOnlyWhenZoomed: true,
             increment: 0.4,
             startTransform: 'scale(1)',

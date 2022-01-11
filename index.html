@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>Parth 42</title>  
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://unpkg.com/@panzoom/panzoom@4.4.3/dist/panzoom.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <style>
         h2 {
             color: black;
@@ -16,7 +16,7 @@
             height: 500px;
             background: #87cefa;
         }
-        .zoomDiv {
+        viewer {
             width: 50%;
             height: 250px;
             background: url(../images/image.jpg);
@@ -25,9 +25,10 @@
     </style>
 </head>
 <body>
-    <h2>Zoom Testing 4</h2>
+    <h2>Zoom Testing</h2>
     <div class="panzoom-elements">
-        <div class="zoomDiv"></div>
+        <div id="viewer">
+        </div>
     </div>
 </body>
 
@@ -38,8 +39,196 @@
         document.querySelectorAll("div.node div.title").forEach(el => el.removeAttribute("onclick"));
         document.querySelectorAll("div.node div.title").forEach(el => el.style.cursor = "auto");
         document.querySelectorAll("i.oci-chevron-down, div.tooltipDiv").forEach(el => el.remove());
-        
-        $(".zoomDiv").panzoom({ });
     })();
+</script>
+<script>
+window.onload = function() {
+var v = new UI.Viewer(document.getElementById('viewer'));
+            v.setViewPortSize({width: 900, height: 600});
+            v.setSource('https://upload.wikimedia.org/wikipedia/commons/d/d9/Big_Bear_Valley,_California.jpg');
+}
+
+
+var Point = (function () {
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    Point.prototype.toString = function () {
+        return '(' + this.x + ';' + this.y + ')';
+    };
+    return Point;
+})();
+var Transform = (function () {
+    function Transform() {
+        this.translate = new Point(0, 0);
+        this.scale = 1;
+        this.angle = 0;
+    }
+    return Transform;
+})();
+var UI;
+(function (UI) {
+    var Viewer = (function () {
+        function Viewer(viewer) {
+            this.ticking = false;
+            console.info("viewer browser on: " + viewer);
+            this.viewer = viewer;
+            this.viewer.style.position = 'relative';
+            this.viewer.style.overflow = 'hidden';
+            this.viewer.style.touchAction = 'none';
+            this.viewer.style.backgroundColor = '#000000';
+            this.viewer.style['-webkit-user-select'] = 'none';
+            this.viewer.style['-webkit-user-drag'] = 'none';
+            this.viewer.style['-webkit-tap-highlight-color'] = 'rgba(0, 0, 0, 0)';
+            this.viewerContent = this.viewer.querySelector(".image");
+            if (this.viewerContent == null) {
+                this.viewerContent = document.createElement('img');
+                this.viewerContent.className = 'image';
+                this.viewer.appendChild(this.viewerContent);
+            }
+            this.viewerContent.style.position = 'absolute';
+            this.viewerContent.style.transition = 'transform 100ms linear';
+            console.info("image width = " + this.viewer.clientWidth + "x" + this.viewer.clientHeight);
+            this.transform = new Transform();
+            this.initializeHammerEvents();
+            console.info("viewer controller constructed: " + this.transform);
+            this.setViewPortSize({ width: this.viewer.clientWidth, height: this.viewer.clientHeight });
+        }
+        Viewer.prototype.initializeHammerEvents = function () {
+            var _this = this;
+            this.gestureManager = new Hammer.Manager(this.viewer, {
+                touchAction: 'pan-x pan-y'
+            });
+            this.gestureManager.add(new Hammer.Pinch({
+                threshold: 0
+            }));
+            this.gestureManager.on("pinchstart pinchmove", function (event) { _this.onPinch(event); });
+            this.viewerContent.addEventListener("click", function (event) {
+                _this.onImageClick(event);
+            });
+        };
+        Viewer.prototype.enableGestures = function () {
+            this.initializeHammerEvents();
+            this.viewer.style.pointerEvents = 'auto';
+        };
+        Viewer.prototype.disableGestures = function () {
+            this.viewer.style.pointerEvents = 'none';
+            this.gestureManager.off('panstart panmove rotatestart rotatemove pinchstart pinchmove pinchend rotateend press doubletap');
+        };
+        Viewer.prototype.setViewPortSize = function (size) {
+            this.viewer.style.width = size.width + 'px';
+            this.viewer.style.height = size.height + 'px';
+            this.adjustZoom();
+        };
+        Viewer.prototype.getViewPortSize = function () {
+            return {
+                width: this.viewer.clientWidth,
+                height: this.viewer.clientHeight
+            };
+        };
+        Viewer.prototype.getDocumentSize = function () {
+            return {
+                width: this.viewerContent.clientWidth,
+                height: this.viewerContent.clientHeight
+            };
+        };
+        Viewer.prototype.setSource = function (source) {
+            var _this = this;
+            this.viewerContent.src = source;
+            this.viewerContent.onload = function () {
+                console.info("image loaded");
+                _this.adjustZoom();
+            };
+        };
+        Viewer.prototype.adjustZoom = function () {
+            var size = this.getViewPortSize();
+            var documentSize = this.getDocumentSize();
+            console.info("adjust zoom, documentSize: " + documentSize.width + "x" + documentSize.height);
+            console.info("adjust zoom, viewPortSize: " + size.width + "x" + size.height);
+            this.minScale = 100 / documentSize.width;
+            console.info("minScale=" + this.minScale);
+            var widthScale = size.width / documentSize.width;
+            var heightScale = size.height / documentSize.height;
+            var scale = Math.min(widthScale, heightScale);
+            var left = (size.width - documentSize.width) / 2;
+            var top = (size.height - documentSize.height) / 2;
+            console.log("setting content to : left => " + left + "  , top => " + top, ", scale => ", scale);
+            this.viewerContent.style.left = left + 'px';
+            this.viewerContent.style.top = top + 'px';
+            this.transform.scale = scale;
+            this.updateElementTransform();
+        };
+        Viewer.prototype.onPinch = function (ev) {
+            var pinchCenter = new Point(ev.center.x - this.viewer.offsetLeft, ev.center.y - this.viewer.offsetTop);
+            console.info("pinch - center=" + pinchCenter + " scale=" + ev.scale);
+            if (ev.type == 'pinchstart') {
+                this.pinchInitialScale = this.transform.scale || 1;
+            }
+            var targetScale = this.pinchInitialScale * ev.scale;
+            if (targetScale <= this.minScale) {
+                targetScale = this.minScale;
+            }
+            if (Math.abs(this.transform.scale - this.minScale) < 1e-10
+                && Math.abs(targetScale - this.minScale) < 1e-10) {
+                console.debug('already at min scale');
+                this.requestElementUpdate();
+                return;
+            }
+            this.zoomTo(new Point(ev.center.x, ev.center.y), targetScale);
+        };
+        Viewer.prototype.onImageClick = function (event) {
+            console.info("click");
+            var zoomCenter = new Point(event.pageX - this.viewer.offsetLeft, event.pageY - this.viewer.offsetTop);
+            var scaleFactor = event.shiftKey || event.ctrlKey ? 0.75 : 1.25;
+            this.zoomTo(zoomCenter, scaleFactor * this.transform.scale);
+        };
+        Viewer.prototype.zoomTo = function (zoomCenter, newScale) {
+            var viewPortSize = this.getViewPortSize();
+            var viewPortCenter = new Point(viewPortSize.width / 2, viewPortSize.height / 2);
+            var zoomRelativeCenter = new Point(zoomCenter.x - viewPortCenter.x, zoomCenter.y - viewPortCenter.y);
+            console.debug('clicked at ' + zoomRelativeCenter + ' (relative to center)');
+            var oldScale = this.transform.scale;
+            // calculate translate difference 
+            // 1. center on new coordinates
+            var zoomDx = -(zoomRelativeCenter.x) / oldScale;
+            var zoomDy = -(zoomRelativeCenter.y) / oldScale;
+            // 2. translate from center to clicked point with new zoom
+            zoomDx += (zoomRelativeCenter.x) / newScale;
+            zoomDy += (zoomRelativeCenter.y) / newScale;
+            console.debug('dx=' + zoomDx + ' dy=' + zoomDy + ' oldScale=' + oldScale);
+            /// move to the difference
+            this.transform.translate.x += zoomDx;
+            this.transform.translate.y += zoomDy;
+            this.transform.scale = newScale;
+            console.debug("applied zoom: scale= " + this.transform.scale + ' translate=' + this.transform.translate);
+            this.requestElementUpdate();
+        };
+        Viewer.prototype.requestElementUpdate = function () {
+            var _this = this;
+            if (!this.ticking) {
+                window.requestAnimationFrame(function () { _this.updateElementTransform(); });
+                this.ticking = true;
+            }
+        };
+        Viewer.prototype.updateElementTransform = function () {
+            var value = [
+                'rotate(' + this.transform.angle + 'deg)',
+                'scale(' + this.transform.scale + ', ' + this.transform.scale + ')',
+                'translate3d(' + this.transform.translate.x + 'px, ' + this.transform.translate.y + 'px, 0px)',
+            ];
+            var stringValue = value.join(" ");
+            console.debug("transform = " + stringValue);
+            this.viewerContent.style.transform = stringValue;
+            this.viewerContent.style.webkitTransform = stringValue;
+            this.viewerContent.style.MozTransform = stringValue;
+            this.viewerContent.style.msTransform = stringValue;
+            this.viewerContent.style.OTransform = stringValue;
+            this.ticking = false;
+        };
+        return Viewer;
+    })();
+    UI.Viewer = Viewer;
+})(UI || (UI = {}));
 </script>
 

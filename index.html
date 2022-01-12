@@ -925,7 +925,7 @@
             </div>
         </div>
     </div>
-    <button type="button" class="reset-panzoom">Reset Zoom 1</button>
+    <button type="button" class="reset-panzoom">Reset Zoom</button>
 </body>
 
 </html>
@@ -935,7 +935,7 @@
         const panzoom = Panzoom(elem, {
             minScale: 1,
             maxScale: 10,
-            panOnlyWhenZoomed: true,
+            panOnlyWhenZoomed: false,
             increment: 0.4,
             startTransform: 'scale(1)',
             $reset: $('.reset-panzoom, button.reset-panzoom'),

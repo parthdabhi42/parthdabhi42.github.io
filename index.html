@@ -925,7 +925,7 @@
             </div>
         </div>
     </div>
-    <button type="button" class="reset-panzoom">Reset Zoom</button>
+    <button type="button" class="reset-panzoom">Reset Zoom 1</button>
 </body>
 
 </html>
@@ -943,5 +943,8 @@
                 $('.zoomTargetGroup').panzoom( 'zoom', {increment: .01});
             }
         });
+        setTimeout(function() {
+            $("#chart_container").removeAttr('style');
+        }, 500);
     })();
 </script>
